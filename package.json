@@ -1,0 +1,22 @@
+{
+  "name": "movies-explorer-api",
+  "version": "1.0.0",
+  "description": "Backend of diploma project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "npx eslint .",
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DRON369/movies-explorer-api.git"
+  },
+  "author": "dron369",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DRON369/movies-explorer-api/issues"
+  },
+  "homepage": "https://github.com/DRON369/movies-explorer-api#readme"
+}
