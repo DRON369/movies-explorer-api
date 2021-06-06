@@ -11,6 +11,9 @@ connect('mongodb://localhost:27017/bitfilmsdb', {
   useFindAndModify: false,
 });
 
+app.use('/users', require('./routes/users'));
+app.use('/movies', require('./routes/movies'));
+
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
 });
