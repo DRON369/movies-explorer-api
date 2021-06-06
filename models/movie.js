@@ -1,9 +1,5 @@
 const mongoose = require('mongoose');
 
-function linkValidator(link) {
-  return /(https|http?):\/\/\w*\S*\./.test(link);
-}
-
 const movieSchema = new mongoose.Schema({
   // страна создания фильма
   country: {
@@ -35,7 +31,9 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      linkValidator,
+      validator(v) {
+        return /(https|http?):\/\/\w*\S*\./.test(v);
+      },
     },
   },
   // ссылка на трейлер фильма
@@ -43,7 +41,9 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      linkValidator,
+      validator(v) {
+        return /(https|http?):\/\/\w*\S*\./.test(v);
+      },
     },
   },
   // миниатюрное изображение постера к фильму
@@ -51,7 +51,9 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      linkValidator,
+      validator(v) {
+        return /(https|http?):\/\/\w*\S*\./.test(v);
+      },
     },
   },
   // _id пользователя, который сохранил фильм
@@ -61,7 +63,7 @@ const movieSchema = new mongoose.Schema({
   },
   // id фильма, который содержится в ответе сервиса MoviesExplorer
   movieId: {
-    type: mongoose.Types.ObjectId,
+    type: Number,
     required: true,
   },
   // название фильма на русском языке

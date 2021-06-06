@@ -5,12 +5,12 @@ const {
 } = require('../controllers/movies');
 
 // возвращает все сохранённые пользователем фильмы
-router.get('/movies', getSavedMovies);
+router.get('/', getSavedMovies);
 
 // создаёт фильм с переданными в теле данными
-router.post('/movies', createMovie);
+router.post('/', createMovie);
 
 // удаляет сохранённый фильм по id
-router.post('/movies/:movieId', deleteMovieById);
+router.delete('/:movieId', deleteMovieById);
 
 module.exports = router;
