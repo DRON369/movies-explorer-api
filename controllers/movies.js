@@ -1,4 +1,7 @@
 const Movie = require('../models/movie');
+const NotFoundError = require('../errors/not-found-error');
+const BadRequestError = require('../errors/bad-request-error');
+const ForbiddenError = require('../errors/forbidden-error');
 
 module.exports.getSavedMovies = (req, res, next) => {
   Movie.find({})
@@ -41,7 +44,7 @@ module.exports.createMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || 'SyntaxError') {
-        console.log('В запросе переданы некорректные данные');
+        throw new BadRequestError('В запросе переданы некорректные данные');
       }
       next(err);
     })
@@ -53,20 +56,18 @@ module.exports.deleteMovieById = (req, res, next) => {
   Movie.findById(movieId)
     .orFail(new Error('NotValidId'))
     .then((movie) => {
-      // eslint-disable-next-line eqeqeq
-      if (req.user._id != movie.owner) {
-        console.log('Нельзя удалять чужие фильмы!');
+      if (req.user._id.toString() !== movie.owner.toString()) {
+        throw new ForbiddenError('Нельзя удалять чужие фильмы!');
       }
       movie.delete();
       res.send(movie);
     })
     .catch((err) => {
-      console.log(err);
       if (err.message === 'NotValidId') {
-        console.log('Нет фильма с таким id');
+        throw new NotFoundError('Нет фильма с таким id');
       }
       if (err.name === 'CastError') {
-        console.log('В запросе переданы некорректные данные');
+        throw new BadRequestError('В запросе переданы некорректные данные');
       }
       next(err);
     })

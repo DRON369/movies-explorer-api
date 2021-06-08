@@ -1,14 +1,18 @@
 const express = require('express');
+const helmet = require('helmet'); // Защита приложения от web-уязвимостей путём настройки заголовков http
 const { json, urlencoded } = require('body-parser');
 const { connect } = require('mongoose');
-const { createUser } = require('./controllers/users');
+const { login, createUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000 } = process.env;
 const app = express();
 
+app.use(helmet()); // Защита приложения от web-уязвимостей путём настройки заголовков http
 app.use(json());
 app.use(urlencoded({ extended: true }));
 
+app.post('/signin', login);
 app.post('/signup', createUser);
 
 // подключаемся к серверу mongo
@@ -19,17 +23,8 @@ connect('mongodb://localhost:27017/bitfilmsdb', {
   useUnifiedTopology: true,
 });
 
-//! Хардкод. Переделать в следующем проекте
-app.use((req, res, next) => {
-  req.user = {
-    _id: '60bd2b7eff506b1d186d08d2',
-  };
-  next();
-});
-//! =======================================
-
-app.use('/users', require('./routes/users'));
-app.use('/movies', require('./routes/movies'));
+app.use('/users', auth, require('./routes/users'));
+app.use('/movies', auth, require('./routes/movies'));
 
 app.use((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
