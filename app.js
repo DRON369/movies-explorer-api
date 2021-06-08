@@ -4,6 +4,8 @@ const { json, urlencoded } = require('body-parser');
 const { connect } = require('mongoose');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { emailValidator } = require('./middlewares/emailValidator');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -11,9 +13,10 @@ const app = express();
 app.use(helmet()); // Защита приложения от web-уязвимостей путём настройки заголовков http
 app.use(json());
 app.use(urlencoded({ extended: true }));
+app.use(requestLogger);
 
 app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signup', emailValidator, createUser);
 
 // подключаемся к серверу mongo
 connect('mongodb://localhost:27017/bitfilmsdb', {
@@ -25,6 +28,12 @@ connect('mongodb://localhost:27017/bitfilmsdb', {
 
 app.use('/users', auth, require('./routes/users'));
 app.use('/movies', auth, require('./routes/movies'));
+
+app.get('*', (req, res) => {
+  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+});
+
+app.use(errorLogger);
 
 app.use((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
