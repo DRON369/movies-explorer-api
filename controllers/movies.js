@@ -43,7 +43,7 @@ module.exports.createMovie = (req, res, next) => {
       res.send(newMovie);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || 'SyntaxError') {
+      if (err.name === 'ValidationError' || err.name === 'SyntaxError') {
         throw new BadRequestError('В запросе переданы некорректные данные');
       }
       next(err);
@@ -59,8 +59,8 @@ module.exports.deleteMovieById = (req, res, next) => {
       if (req.user._id.toString() !== movie.owner.toString()) {
         throw new ForbiddenError('Нельзя удалять чужие фильмы!');
       }
-      movie.delete();
-      res.send(movie);
+      return movie.remove()
+        .then(() => res.send(movie));
     })
     .catch((err) => {
       if (err.message === 'NotValidId') {

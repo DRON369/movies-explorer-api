@@ -37,7 +37,7 @@ module.exports.createUser = (req, res, next) => {
         if (err.name === 'MongoError' && err.code === 11000) {
           throw new ConflictError('Данный email уже используется');
         }
-        if (err.name === 'ValidationError' || 'SyntaxError') {
+        if (err.name === 'ValidationError' || err.name === 'SyntaxError') {
           throw new BadRequestError('В запросе переданы некорректные данные');
         }
         next(err);
@@ -47,7 +47,7 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
-  User.findById(req.user._id)
+  User.findById(req.user._id).select('-_id')
     .orFail(new Error('NotValidId'))
     .then((user) => res.send(user))
     .catch((err) => {
