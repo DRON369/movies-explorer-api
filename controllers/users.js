@@ -6,7 +6,7 @@ const NotFoundError = require('../errors/not-found-error');
 const BadRequestError = require('../errors/bad-request-error');
 const ConflictError = require('../errors/conflict-error');
 
-function errorHandler(next) {
+function userErrorHandler(next) {
   return (err) => {
     if (err.message === 'NotValidId') {
       throw new NotFoundError('Нет пользователя с таким id');
@@ -68,7 +68,7 @@ module.exports.updateUser = (req, res, next) => {
   )
     .orFail(new Error('NotValidId'))
     .then((user) => res.send(user))
-    .catch(errorHandler(next))
+    .catch(userErrorHandler(next))
     .catch(next);
 };
 

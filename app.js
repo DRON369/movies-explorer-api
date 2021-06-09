@@ -2,11 +2,13 @@ const express = require('express');
 const helmet = require('helmet'); // Защита приложения от web-уязвимостей путём настройки заголовков http
 const { json, urlencoded } = require('body-parser');
 const { connect } = require('mongoose');
+const { errors } = require('celebrate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const routes = require('./routes/index');
 const { errorHandler } = require('./middlewares/errorHandler');
+const { DB_PATH } = require('./config');
 
-const { PORT = 3000, DB_PATH = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
+const { PORT = 3000 } = process.env;
 const app = express();
 
 // подключаемся к серверу mongo
@@ -25,6 +27,7 @@ app.use(urlencoded({ extended: true }));
 
 app.use(routes);
 app.use(errorLogger);
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT, () => {
