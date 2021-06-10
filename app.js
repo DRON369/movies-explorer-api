@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const helmet = require('helmet'); // Защита приложения от web-уязвимостей путём настройки заголовков http
 const { json, urlencoded } = require('body-parser');
 const { connect } = require('mongoose');
@@ -10,7 +11,7 @@ const { DB_PATH } = require('./config');
 
 const { PORT = 3000 } = process.env;
 const app = express();
-
+app.use(cors());
 // подключаемся к серверу mongo
 connect(DB_PATH, {
   useNewUrlParser: true,
