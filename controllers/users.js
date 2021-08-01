@@ -47,7 +47,7 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
-  User.findById(req.user._id).select('-_id')
+  User.findById(req.user._id)
     .orFail(new Error('NotValidId'))
     .then((user) => res.send(user))
     .catch((err) => {
