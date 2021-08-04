@@ -39,13 +39,6 @@
 			"name": "Текущий пользователь",
 			"request": {
 				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGJmYzdhMTBjZjA2MzI0NGNmODgzYTMiLCJpYXQiOjE2MjMxODEyMjgsImV4cCI6MTYyMzc4NjAyOH0.CVbkZ_Nb1ZjWM1fw5zN9CaOFcLff-cvPR-s6gh8mJZc",
-						"type": "text"
-					}
-				],
 				"url": {
 					"raw": "https://api.movies.dron369.ru/users/me",
 					"protocol": "https",
